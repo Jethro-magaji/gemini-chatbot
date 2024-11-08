@@ -184,9 +184,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## 📫 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+Your Name - [@Real_Drjet](https://twitter.com/@Real_Drjet)
 
-Project Link: [https://github.com/yourusername/gemini-chatbot](https://github.com/yourusername/gemini-chatbot)
+Project Link: [https://github.com/jethro-magaji/gemini-chatbot](https://github.com/jethro-magaji/gemini-chatbot)
 
 ---
 
@@ -208,15 +208,15 @@ Error: Unsupported file type
 ```
 Solution: Check if your document format is supported (PDF, DOC, DOCX).
 
-For more issues, please check our [Issues](https://github.com/yourusername/gemini-chatbot/issues) page.
+For more issues, please check our [Issues](https://github.com/jethro-magaji/gemini-chatbot/issues) page.
 
 ## 🚀 Deployment
 
 ### Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/gemini-chatbot)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jethro-magaji/gemini-chatbot)
 
 Remember to set your environment variables in your Vercel project settings!
 
 ---
 
-Made with ❤️ by [Your Name](https://github.com/jethro-magaji)
+Made with ❤️ by [Jethro Magaji](https://github.com/jethro-magaji)
