@@ -30,7 +30,7 @@ A modern, intelligent chatbot built with Next.js 13+, Google's Gemini AI, and Ty
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/gemini-chatbot.git
+git clone https://github.com/jethro-magaji/gemini-chatbot.git
 cd gemini-chatbot
 ```
 
