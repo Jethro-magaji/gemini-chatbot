@@ -90,14 +90,23 @@ export default function Home() {
         
         if (!response.ok) throw new Error('Failed to process document');
         
-        const { text } = await response.json();
+        const { text, summary } = await response.json();
         
         setDocumentContext(prev => prev + '\n' + text);
         
+        // Add file upload notification
         setMessages(prev => [...prev, {
           role: 'system',
           content: `Document "${file.name}" has been uploaded and processed.`
         }]);
+
+        // Add summary message if available
+        if (summary) {
+          setMessages(prev => [...prev, {
+            role: 'assistant',
+            content: `Here's a summary of the document:\n\n${summary}`
+          }]);
+        }
       }
       
       setDocuments(prev => [...prev, ...uploadedFiles]);
