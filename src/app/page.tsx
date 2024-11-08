@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, Send, Loader2, Upload } from 'lucide-react';
 import type { Message } from '@/types/chat';
 
 export default function Home() {
@@ -11,6 +11,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [documents, setDocuments] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [documentContext, setDocumentContext] = useState<string>('');
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
@@ -42,6 +45,7 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [...messages, userMessage],
+          documentContext: documentContext
         }),
       });
 
@@ -61,6 +65,44 @@ export default function Home() {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       console.error('Chat Error:', error);
       setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files) return;
+    
+    setIsLoading(true);
+    try {
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      const uploadedFiles = Array.from(files).filter(file => allowedTypes.includes(file.type));
+      
+      // Convert files to text content
+      for (const file of uploadedFiles) {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const response = await fetch('/api/process-document', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) throw new Error('Failed to process document');
+        
+        const { text } = await response.json();
+        
+        setDocumentContext(prev => prev + '\n' + text);
+        
+        setMessages(prev => [...prev, {
+          role: 'system',
+          content: `Document "${file.name}" has been uploaded and processed.`
+        }]);
+      }
+      
+      setDocuments(prev => [...prev, ...uploadedFiles]);
+    } catch (error) {
+      setError('Failed to process document. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -144,7 +186,24 @@ export default function Home() {
         {/* Input Area */}
         <div className="border-t bg-white p-4">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-            <div className="relative">
+            <div className="relative flex items-center gap-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={(e) => handleFileUpload(e.target.files)}
+                className="hidden"
+                accept=".pdf,.doc,.docx"
+                multiple
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 text-gray-500 hover:text-gray-700 border rounded-lg"
+                disabled={isLoading}
+              >
+                <Upload className="w-5 h-5" />
+              </button>
+              
               <input
                 ref={inputRef}
                 type="text"

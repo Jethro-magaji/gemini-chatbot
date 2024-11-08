@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { NextRequest, NextResponse } from 'next/server';
 
 if (!process.env.GOOGLE_API_KEY) {
   throw new Error('GOOGLE_API_KEY is not set in environment variables');
@@ -6,55 +7,43 @@ if (!process.env.GOOGLE_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const { messages, documentContext } = await req.json();
     
     if (!messages || !Array.isArray(messages)) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid messages format' }), 
-        { status: 400, headers: { 'Content-Type': 'application/json' }}
+      return NextResponse.json(
+        { error: 'Invalid messages format' },
+        { status: 400 }
       );
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    // Format the conversation history for Gemini
-    const history = messages.slice(0, -1).map((msg: any) => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }],
-    }));
-
-    const chat = model.startChat({
-      history: history,
+    const geminiChat = model.startChat({
+      generationConfig: {
+        maxOutputTokens: 1000,
+      },
     });
 
-    // Send the last message
-    const lastMessage = messages[messages.length - 1].content;
-    const result = await chat.sendMessage([{ text: lastMessage }]);
-    const response = await result.response;
-    const text = response.text();
-
-    if (!text) {
-      throw new Error('Empty response from Gemini API');
+    if (documentContext) {
+      await geminiChat.sendMessage(
+        `Here's the context from the uploaded documents: ${documentContext}\n\nPlease use this context to answer questions.`
+      );
     }
 
-    return new Response(
-      JSON.stringify({ content: text }), 
-      { headers: { 'Content-Type': 'application/json' }}
-    );
+    const lastMessage = messages[messages.length - 1].content;
+    const result = await geminiChat.sendMessage(lastMessage);
+    const response = await result.response;
 
+    return NextResponse.json({ content: response.text() });
   } catch (error: any) {
     console.error('API Route Error:', error);
-    return new Response(
-      JSON.stringify({ 
+    return NextResponse.json(
+      { 
         error: error.message || 'Unknown error occurred',
         details: error.toString()
-      }), 
-      { 
-        status: 500, 
-        headers: { 'Content-Type': 'application/json' }
-      }
+      },
+      { status: 500 }
     );
   }
 }
