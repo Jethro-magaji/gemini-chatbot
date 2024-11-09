@@ -1,4 +1,4 @@
-# 🤖 Gemini AI Chatbot with Next.js
+# 🤖 AI Document Chatbot Using Gemini API & Next.js
 
 A modern, intelligent chatbot built with Next.js 13+, Google's Gemini AI, and TypeScript. Features document processing capabilities and a sleek, responsive interface.
 
@@ -160,7 +160,8 @@ export const config = {
 1. Click the upload button
 2. Select supported documents
 3. Wait for processing
-4. Chat with context from your documents
+4. Smart document summary
+5. Chat with context from your documents
 
 ## 🤝 Contributing
 
