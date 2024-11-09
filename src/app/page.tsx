@@ -145,7 +145,7 @@ export default function Home() {
         {/* Header */}
         <header className="sticky top-0 z-10 bg-white border-b p-4">
           <div className="flex items-center justify-between max-w-3xl mx-auto">
-            <h2 className="text-lg font-medium">Chat with Gemini</h2>
+            <h2 className="text-lg font-medium">Chat with your documents using AI</h2>
           </div>
         </header>
 
@@ -154,8 +154,8 @@ export default function Home() {
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-4 text-gray-500">
               <MessageCircle className="w-12 h-12" />
-              <h3 className="text-xl font-medium">Welcome to Gemini Chat</h3>
-              <p className="max-w-md">Start a conversation with Gemini AI and explore its capabilities.</p>
+              <h3 className="text-xl font-medium">Welcome to AI Document Chatbot</h3>
+              <p className="max-w-md">Start a conversation with your documents using AI and explore its capabilities.</p>
             </div>
           ) : (
             messages.map((message, index) => (
