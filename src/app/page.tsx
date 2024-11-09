@@ -123,7 +123,7 @@ export default function Home() {
       <div className="hidden md:flex md:w-72 bg-gray-900 text-white p-4 flex-col">
         <div className="flex items-center space-x-2 mb-8">
           <MessageCircle className="w-6 h-6" />
-          <h1 className="text-xl font-semibold">Gemini Chat</h1>
+          <h1 className="text-xl font-semibold">AI Document Chatbot</h1>
         </div>
         
         <button 
